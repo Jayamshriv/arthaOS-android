@@ -1,59 +1,58 @@
 [versions]
-# ── Core build tools ──────────────────────────────────────────────────────
-agp = "8.5.0"
-kotlin = "1.9.24"                    # bumped — required by Compose BOM below
+# Build Tools
+agp = "8.5.2"
+kotlin = "1.9.24"
 
-# ── AndroidX core ─────────────────────────────────────────────────────────
-coreKtx = "1.16.0"
+# AndroidX
+coreKtx = "1.13.1"
+lifecycle = "2.8.3"
+activityCompose = "1.9.1"
 lifecycleRuntimeKtx = "2.9.2"
-activityCompose = "1.10.1"
-composeBom = "2024.09.00"            # bumped — latest stable, matches Kotlin 1.9.24
+# Compose
+composeBom = "2024.06.00"
 
-# ── Navigation ────────────────────────────────────────────────────────────
-navigation = "2.7.7"
+# Navigation
+navigation = "2.8.0"
 
-# ── Lifecycle extras ──────────────────────────────────────────────────────
-lifecycle = "2.9.2"
-
-# ── Hilt ──────────────────────────────────────────────────────────────────
+# Hilt
 hilt = "2.51.1"
-hiltExt = "1.2.0"                    # hilt-navigation-compose, hilt-work, hilt-compiler
+hiltExt = "1.2.0"
 
-# ── Room ──────────────────────────────────────────────────────────────────
+# Room
 room = "2.6.1"
 
-# ── CameraX ───────────────────────────────────────────────────────────────
+# CameraX
 camerax = "1.3.4"
 
-# ── ML Kit ────────────────────────────────────────────────────────────────
+# ML Kit
 mlkitText = "16.0.0"
 
-# ── Coroutines ────────────────────────────────────────────────────────────
+# Coroutines
 coroutines = "1.8.1"
 
-# ── DataStore ─────────────────────────────────────────────────────────────
+# DataStore
 datastore = "1.1.1"
 
-# ── WorkManager ───────────────────────────────────────────────────────────
+# WorkManager
 work = "2.9.1"
 
-# ── Glance (widget) ───────────────────────────────────────────────────────
-glance = "1.1.0"
+# Glance
+glance = "1.1.1"
 
-# ── Vico (charts) ─────────────────────────────────────────────────────────
-vico = "1.15.0"                      # using stable, not alpha
-
-# ── Biometric ─────────────────────────────────────────────────────────────
+# Biometric
 biometric = "1.1.0"
 
-# ── Testing ───────────────────────────────────────────────────────────────
+# Desugaring
+desugar = "2.1.0"
+
+# Testing
 junit = "4.13.2"
-junitVersion = "1.3.0"
-espressoCore = "3.7.0"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
 mockk = "1.13.11"
 
-# ── Desugaring ────────────────────────────────────────────────────────────
-desugar = "2.0.4"
+# Vico
+vico = "1.15.0"               # using stable, not alpha
 
 [libraries]
 # ── AndroidX core ─────────────────────────────────────────────────────────
