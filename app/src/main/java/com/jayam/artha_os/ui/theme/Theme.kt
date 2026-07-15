@@ -1,4 +1,4 @@
-package com.jayam.aarthaos.ui.theme
+package com.jayam.artha_os.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -207,6 +207,8 @@ fun ArthaOSTheme(
             content     = content,
         )
     }
+
+
 }
 
 // ── Convenience accessor ───────────────────────────────────────────────────

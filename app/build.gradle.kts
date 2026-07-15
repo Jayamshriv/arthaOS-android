@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "com.jayam.arthaos"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.jayam.arthaos"
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 

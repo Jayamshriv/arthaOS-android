@@ -1,4 +1,4 @@
-package com.jayam.aarthaos
+package com.jayam.artha_os
 
 import org.junit.Test
 

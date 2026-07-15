@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AarthaOS"
+rootProject.name = "ArthaOS"
 include(":app")
  

@@ -1,4 +1,4 @@
-package com.jayam.aarthaos.ui.theme
+package com.jayam.artha_os.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Shapes

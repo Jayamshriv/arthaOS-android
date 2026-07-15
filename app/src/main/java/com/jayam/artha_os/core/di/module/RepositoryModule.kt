@@ -1,0 +1,10 @@
+package com.jayam.artha_os.core.di.module
+
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+
+@Module
+@InstallIn(SingletonComponent::class)
+object RepositoryModule {
+}

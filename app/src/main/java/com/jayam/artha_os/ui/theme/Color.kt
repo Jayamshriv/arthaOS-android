@@ -1,4 +1,4 @@
-package com.jayam.aarthaos.ui.theme
+package com.jayam.artha_os.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
