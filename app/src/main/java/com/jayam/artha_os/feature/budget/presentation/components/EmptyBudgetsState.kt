@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.jayam.artha_os.core.ui.common_components.withoutTopPadding
 
 @Composable
 fun EmptyState(
@@ -38,7 +39,7 @@ fun EmptyState(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(padding),
+            .padding(padding.withoutTopPadding()),
         contentAlignment = Alignment.Center
     ) {
         Column(

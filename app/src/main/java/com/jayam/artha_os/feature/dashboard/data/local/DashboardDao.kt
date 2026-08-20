@@ -5,7 +5,6 @@ import androidx.room.Query
 import com.jayam.artha_os.core.database.local.entities.BudgetEntity
 import com.jayam.artha_os.core.database.local.entities.TransactionEntity
 import com.jayam.artha_os.feature.dashboard.domain.DashboardSummary
-import com.jayam.artha_os.feature.ui_models.CategorySpend
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -22,14 +21,14 @@ interface DashboardDao {
     fun getSummary(start: Long, end: Long): Flow<DashboardSummary>
 
     @Query("""
-        SELECT category, SUM(amount) AS totalSpent
-        FROM transactions
-        WHERE type = 'DEBIT' AND date BETWEEN :start AND :end AND category IS NOT NULL
-        GROUP BY category
-        ORDER BY totalSpent DESC
-        LIMIT :limit
-    """)
-    fun getTopCategories(start: Long, end: Long, limit: Int = 5): Flow<List<CategorySpend>>
+    SELECT category, SUM(amount) AS totalSpent
+    FROM transactions
+    WHERE type = 'DEBIT' AND date BETWEEN :start AND :end AND category IS NOT NULL
+    GROUP BY category
+    ORDER BY totalSpent DESC
+    LIMIT :limit
+""")
+    fun getTopCategories(start: Long, end: Long, limit: Int = 5): Flow<List<CategorySpendRow>>
 
     @Query("""
         SELECT * FROM transactions 

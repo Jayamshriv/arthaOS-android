@@ -1,4 +1,4 @@
-package com.jayam.artha_os.feature.receipt_ocr.vm
+package com.jayam.artha_os.feature.receipt_ocr.presentation.vm
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -24,27 +24,33 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import com.jayam.artha_os.feature.receipt_ocr.domain.ReceiptRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import java.io.ByteArrayOutputStream
 import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
-class ReceiptViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+class ReceiptOcrViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val repository: ReceiptRepository
 ) : ViewModel() {
     private val _surfaceRequest = MutableStateFlow<SurfaceRequest?>(null)
     val surfaceRequest: StateFlow<SurfaceRequest?> = _surfaceRequest
-
+    val receipts = repository.getAllReceipts()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
     private var surfaceMeteringPointFactory: SurfaceOrientedMeteringPointFactory? = null
     private var cameraControl: CameraControl? = null
     private val imageCapture = ImageCapture.Builder()

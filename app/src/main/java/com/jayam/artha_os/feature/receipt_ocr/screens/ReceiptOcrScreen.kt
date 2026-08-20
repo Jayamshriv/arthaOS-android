@@ -63,7 +63,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
-import com.jayam.artha_os.feature.receipt_ocr.vm.ReceiptViewModel
+import com.jayam.artha_os.feature.receipt_ocr.presentation.vm.ReceiptOcrViewModel
 import kotlinx.coroutines.delay
 import java.util.UUID
 
@@ -71,7 +71,7 @@ import java.util.UUID
 @Composable
 fun ReceiptOcrScreen(
     modifier: Modifier = Modifier,
-    viewModel: ReceiptViewModel = hiltViewModel()
+    viewModel: ReceiptOcrViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
@@ -187,7 +187,7 @@ private fun ReceiptReviewScreen(
 }
 @Composable
 fun CameraPreviewContent(
-    viewModel: ReceiptViewModel,
+    viewModel: ReceiptOcrViewModel,
     modifier: Modifier = Modifier,
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) {

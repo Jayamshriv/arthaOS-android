@@ -1,6 +1,7 @@
 package com.jayam.artha_os.core.ui.common_components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,6 +14,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -24,6 +27,26 @@ fun LoadingCard() {
     ) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator(color = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
+        }
+    }
+}
+
+fun PaddingValues.withoutTopPadding(): PaddingValues {
+    return object : PaddingValues {
+        override fun calculateLeftPadding(layoutDirection: LayoutDirection): Dp {
+            return this@withoutTopPadding.calculateLeftPadding(layoutDirection)
+        }
+
+        override fun calculateTopPadding(): Dp {
+            return 0.dp // Hardcode top padding to zero
+        }
+
+        override fun calculateRightPadding(layoutDirection: LayoutDirection): Dp {
+            return this@withoutTopPadding.calculateRightPadding(layoutDirection)
+        }
+
+        override fun calculateBottomPadding(): Dp {
+            return this@withoutTopPadding.calculateBottomPadding()
         }
     }
 }

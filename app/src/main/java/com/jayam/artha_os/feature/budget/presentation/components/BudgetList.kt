@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.jayam.artha_os.core.ui.common_components.withoutTopPadding
 import com.jayam.artha_os.feature.ui_models.BudgetSummary
 import java.text.NumberFormat
 import java.util.Locale
@@ -36,7 +37,7 @@ fun BudgetList(
     val formatter = remember { NumberFormat.getCurrencyInstance(Locale("en", "IN")) }
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 20.dp),
+        modifier = Modifier.fillMaxSize().padding(padding.withoutTopPadding()),
         contentPadding = PaddingValues(vertical = 24.dp, ),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {

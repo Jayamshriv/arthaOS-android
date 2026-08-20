@@ -1,7 +1,10 @@
 package com.jayam.artha_os.feature.profile.presentation
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -46,20 +49,30 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.jayam.artha_os.core.database.local.entities.ParseStatus
 import com.jayam.artha_os.core.ui.theme.ArthaOSTheme
 import com.jayam.artha_os.core.ui.theme.ArthaTheme
+import com.jayam.artha_os.feature.sms.domain.SmsInfo
 
 @Preview
 @Composable
@@ -79,6 +92,27 @@ fun ProfileScreenContent(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val sms by viewModel.allSms.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    var hasSmsPermission by remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(context, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED
+        )
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { results ->
+        hasSmsPermission = results.values.all { it }
+    }
+
+    LaunchedEffect(Unit) {
+        if (!hasSmsPermission) {
+            permissionLauncher.launch(
+                arrayOf(Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS)
+            )
+        }
+    }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface
     ) { innerPadding ->
@@ -88,7 +122,7 @@ fun ProfileScreenContent(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = 20.dp),
-            contentPadding = PaddingValues(vertical = 24.dp),
+           contentPadding = PaddingValues(bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
 
@@ -100,9 +134,8 @@ fun ProfileScreenContent(
                 )
             }
 
-            items(sms){
-                Log.e("smssmssmssms" ,sms.toString())
-                Text(it.toString())
+            items(sms, key = { it.uuid.toString() }) { info ->
+                SmsLogItem(info)
             }
 
             // ── Quick stats ───────────────────────────────────────────
@@ -335,6 +368,55 @@ private fun VerticalStatDivider() {
             .width(1.dp)
             .background(ArthaTheme.colors.cardBorder)
     )
+}
+@Composable
+private fun SmsLogItem(info: SmsInfo) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .padding(14.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = info.senderId,
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.SemiBold
+            )
+            Text(
+                text = info.parseStatus.name,
+                style = MaterialTheme.typography.labelSmall,
+                color = when (info.parseStatus) {
+                    ParseStatus.PARSED -> Color(0xFF3EA05B)
+                    ParseStatus.FAILED -> MaterialTheme.colorScheme.error
+                    ParseStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
+                    ParseStatus.IGNORED -> MaterialTheme.colorScheme.outline
+                }
+            )
+        }
+
+        Spacer(Modifier.height(6.dp))
+
+        Text(
+            text = info.rawSms,
+            style = MaterialTheme.typography.bodyMedium,
+            maxLines = 3,
+            overflow = TextOverflow.Ellipsis
+        )
+
+        info.amount?.let { amount ->
+            Spacer(Modifier.height(6.dp))
+            Text(
+                text = "₹$amount" + (info.transactionType?.let { " · ${it.name}" } ?: ""),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
 }
 
 @Composable

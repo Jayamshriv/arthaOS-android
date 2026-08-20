@@ -24,11 +24,16 @@ import androidx.compose.ui.unit.dp
 
 sealed interface UiState<out T> {
     data object Loading :UiState<Nothing>
-    data class Success<T>(val data: T, val isRefreshing: Boolean = false) :
-        UiState<T>
-    data class Error<T>(val message: String) :
-        UiState<T>
+    data class Success<T>(val data: T, val isRefreshing: Boolean = false) : UiState<T>
+    data class Error<T>(val message: String, val cachedData: T? = null) : UiState<T>
+
 }
+
+inline fun <T> Result<T>.toUiState(cachedData: T? = null): UiState<T> =
+    fold(
+        onSuccess = { UiState.Success(it) },
+        onFailure = { UiState.Error(it.message ?: "Something went wrong", cachedData) }
+    )
 
 
 @Composable

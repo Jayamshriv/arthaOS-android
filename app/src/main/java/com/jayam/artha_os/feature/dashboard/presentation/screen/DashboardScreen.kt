@@ -1,20 +1,28 @@
 package com.jayam.artha_os.feature.dashboard.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jayam.artha_os.core.ui.common_components.withoutTopPadding
 import com.jayam.artha_os.core.ui.theme.ArthaOSTheme
 import com.jayam.artha_os.core.ui.ui_utils.ErrorBanner
 import com.jayam.artha_os.core.ui.ui_utils.LoadingRow
@@ -33,9 +41,9 @@ fun DashboardScreen(state: HomeUiState,onRetryBalance: () -> Unit, onRetryTransa
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 20.dp),
-            contentPadding = PaddingValues(vertical = 24.dp),
+                .padding(padding.withoutTopPadding())
+                ,
+           contentPadding = PaddingValues(bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             item {
@@ -86,30 +94,57 @@ fun DashboardScreen(state: HomeUiState,onRetryBalance: () -> Unit, onRetryTransa
 }
 
 
-@Preview(showBackground = true, backgroundColor = 0xFF121212)
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(
+    showBackground = true,
+    backgroundColor = 0xFF121212,
+    showSystemUi = true
+)
 @Composable
 private fun HomeScreenPreview() {
-    ArthaOSTheme(true) {
-        DashboardScreen(
-            state = HomeUiState(
-                balance = UiState.Success(AccountBalance(totalBalance = 84320.50, accountCount = 2)),
-                budget = UiState.Success(
-                    BudgetSummary(
-                        spent = 19400.0,
-                        limit = 20000.0,
-                        category = "Food & dining"
+    ArthaOSTheme(darkTheme = true) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text("Home")
+                    },
+                    actions = {
+                        IconButton(onClick = {}) {
+                            Icon(
+                                imageVector = Icons.Filled.AccountCircle,
+                                contentDescription = "Profile"
+                            )
+                        }
+                    }
+                )
+            }
+        ) { innerPadding ->
+            val contentModifier =  Modifier.padding(innerPadding)
+            Box(modifier = contentModifier){
+            DashboardScreen(
+                state = HomeUiState(
+                    balance = UiState.Success(
+                        AccountBalance(
+                            totalBalance = 84320.50,
+                            accountCount = 2
+                        )
+                    ),
+                    budget = UiState.Success(
+                        BudgetSummary(
+                            spent = 19400.0,
+                            limit = 20000.0,
+                            category = "Food & dining"
+                        )
+                    ),
+                    recentTransactions = UiState.Error(
+                        message = "No internet connection"
                     )
                 ),
-                recentTransactions = UiState.Error(
-                    message = "No internet connection",
-//                    cachedData = listOf(
-//                        TransactionItem("1", "Zomato", amount = 420.0, isCredit = false, category = "Food")
-//                    )
-                )
-            ),
-            onRetryBalance = {},
-            onRetryTransactions = {}
-        )
+                onRetryBalance = {},
+                onRetryTransactions = {}
+            )
+        }}
     }
 }
 //

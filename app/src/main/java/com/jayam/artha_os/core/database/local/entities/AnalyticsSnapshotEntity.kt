@@ -13,11 +13,13 @@ import com.jayam.artha_os.feature.analytics.domain.AnalyticsPeriodType
 data class AnalyticsSnapshotEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val periodType: AnalyticsPeriodType,     // DAILY, WEEKLY, MONTHLY
-    val periodKey: String,          // e.g. "2026-07" for monthly, "2026-W29" for weekly
+    val periodType: AnalyticsPeriodType,
+    val periodKey: String,
     val totalIncome: Double,
     val totalExpense: Double,
     val topCategory: String? = null,
-    val categoryBreakdownJson: String,  // serialized Map<String, Double>
+    val categoryBreakdownJson: String,
+    val monthlyTrendJson: String,     // List<MonthlyTrendPoint> serialized
+    val topMerchantsJson: String,     // List<MerchantSpend> serialized
     val computedAt: Long = System.currentTimeMillis()
 )

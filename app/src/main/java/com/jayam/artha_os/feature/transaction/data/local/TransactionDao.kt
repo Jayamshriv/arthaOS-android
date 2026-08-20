@@ -9,15 +9,15 @@ import androidx.room.Update
 import com.jayam.artha_os.core.database.local.entities.TransactionEntity
 import com.jayam.artha_os.core.database.local.helper.TransactionType
 import kotlinx.coroutines.flow.Flow
+import kotlin.uuid.Uuid
 
 @Dao
 interface TransactionDao {
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(transaction: TransactionEntity)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(transaction: TransactionEntity): Long
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAll(transactions: List<TransactionEntity>): List<Long>
+    suspend fun insertAll(transactions: List<TransactionEntity>)
 
     @Update
     suspend fun update(transaction: TransactionEntity)
@@ -26,10 +26,10 @@ interface TransactionDao {
     suspend fun delete(transaction: TransactionEntity)
 
     @Query("DELETE FROM transactions WHERE id = :id")
-    suspend fun deleteById(id: Long)
+    suspend fun deleteById(id: Uuid)
 
     @Query("SELECT * FROM transactions WHERE id = :id")
-    suspend fun getById(id: Long): TransactionEntity?
+    suspend fun getById(id: Uuid): TransactionEntity?
 
     @Query("SELECT * FROM transactions WHERE referenceId = :referenceId LIMIT 1")
     suspend fun getByReferenceId(referenceId: String): TransactionEntity?

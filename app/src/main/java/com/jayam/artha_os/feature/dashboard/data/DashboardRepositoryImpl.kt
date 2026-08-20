@@ -1,11 +1,11 @@
 package com.jayam.artha_os.feature.dashboard.data
 
 import com.jayam.artha_os.feature.budget.domain.Budget
+import com.jayam.artha_os.feature.dashboard.data.local.CategorySpendRow
 import com.jayam.artha_os.feature.dashboard.data.local.DashboardDao
 import com.jayam.artha_os.feature.dashboard.domain.DashboardRepository
 import com.jayam.artha_os.feature.dashboard.domain.DashboardSummary
 import com.jayam.artha_os.feature.transaction.domain.Transaction
-import com.jayam.artha_os.feature.ui_models.CategorySpend
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -21,9 +21,9 @@ class DashboardRepositoryImpl @Inject constructor(
             DashboardSummary(it.totalIncome, it.totalExpense, it.transactionCount)
         }
 
-    override fun getTopCategories(start: Long, end: Long, limit: Int): Flow<List<CategorySpend>> =
+    override fun getTopCategories(start: Long, end: Long, limit: Int): Flow<List<CategorySpendRow>> =
         dao.getTopCategories(start, end, limit).map { list ->
-            list.map { CategorySpend(it.category, it.amount, it.percentage) }
+            list.map { CategorySpendRow(it.category, it.totalSpent) }
         }
 
     override fun getRecentTransactions(limit: Int): Flow<List<Transaction>> =

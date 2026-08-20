@@ -38,7 +38,7 @@ fun TransactionRow(item: TransactionItem) {
         )
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
-            Text(item.merchant, color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.bodyLarge)
+            Text(item.name, color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.bodyLarge)
             Text(item.category, color = Color.White.copy(alpha = 0.5f), style = MaterialTheme.typography.bodySmall)
         }
         Text(

@@ -18,11 +18,11 @@ val sampleTransactions = listOf(
 )
 
 val sampleBudgets = listOf(
-    BudgetSummary("1", "Food", 3200.0, 5000.0),
-    BudgetSummary("2", "Shopping", 5600.0, 4000.0),
-    BudgetSummary("3", "Travel", 1800.0, 3000.0),
-    BudgetSummary("4", "Bills", 2900.0, 3000.0),
-    BudgetSummary("5", "Entertainment", 900.0, 2000.0)
+    BudgetSummary(1, "Food", 3200.0, 5000.0),
+    BudgetSummary(2, "Shopping", 5600.0, 4000.0),
+    BudgetSummary(3, "Travel", 1800.0, 3000.0),
+    BudgetSummary(4, "Bills", 2900.0, 3000.0),
+    BudgetSummary(5, "Entertainment", 900.0, 2000.0)
 )
 
 val sampleAnalytics = AnalyticsData(

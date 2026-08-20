@@ -20,35 +20,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.jayam.artha_os.core.ui.ui_utils.UiState
+import com.jayam.artha_os.feature.analytics.presentation.AnalyticsViewModel
 import com.jayam.artha_os.feature.analytics.presentation.screens.AnalyticsScreenContent
+import com.jayam.artha_os.feature.budget.presentation.BudgetViewModel
 import com.jayam.artha_os.feature.budget.presentation.screens.BudgetsScreenContent
+import com.jayam.artha_os.feature.dashboard.presentation.DashboardViewModel
 import com.jayam.artha_os.feature.dashboard.presentation.screen.DashboardScreen
-import com.jayam.artha_os.feature.dashboard.presentation.screen.HomeUiState
 import com.jayam.artha_os.feature.profile.presentation.ProfileScreenContent
+import com.jayam.artha_os.feature.profile.presentation.ProfileViewModel
+import com.jayam.artha_os.feature.receipt_ocr.presentation.vm.ReceiptOcrViewModel
 import com.jayam.artha_os.feature.receipt_ocr.screens.ReceiptOcrScreen
-import com.jayam.artha_os.feature.transaction.presentation.sampleBudgets
-import com.jayam.artha_os.feature.transaction.presentation.sampleTransactions
+import com.jayam.artha_os.feature.transaction.presentation.TransactionsViewModel
 import com.jayam.artha_os.feature.transaction.presentation.screens.TransactionsScreenContent
-import com.jayam.artha_os.feature.transaction.presentation.screens.TransactionsUiState
-import com.jayam.artha_os.feature.ui_models.AccountBalance
-import com.jayam.artha_os.feature.ui_models.BudgetSummary
 
-/**
- * ---------------------------------------------------------------------
- * BOTTOM NAV CONFIG
- * ---------------------------------------------------------------------
- * Only these four are tabs. ProfileScreen and ReceiptOCRScreen are
- * reached by navigating to them directly (profile icon / FAB or
- * wherever you trigger OCR from) — they don't get a slot here.
- * ---------------------------------------------------------------------
- */
 private data class BottomNavItem(
     val label: String,
     val icon: ImageVector,
@@ -146,91 +139,72 @@ fun BaseNavGraph() {
             }
         }
     ) { innerPadding ->
-        val contentModifier = if (showChrome) Modifier.padding(innerPadding) else Modifier
+        val contentModifier = if (showChrome) Modifier.padding(innerPadding).padding(horizontal = 16.dp).padding(top = 12.dp) else Modifier
 
         NavHost(
             navController = navController,
-            startDestination = NavRoutes.DashboardScreen, // was ProfileScreen — flip back if that was intentional
+            startDestination = NavRoutes.DashboardScreen,
             modifier = contentModifier
         ) {
             composable<NavRoutes.DashboardScreen> {
+                val viewModel: DashboardViewModel = hiltViewModel()
+                val state by viewModel.state.collectAsStateWithLifecycle()
+
                 DashboardScreen(
-                    state = HomeUiState(
-                        balance = UiState.Success(AccountBalance(totalBalance = 84320.50, accountCount = 2)),
-                        budget = UiState.Success(
-                            BudgetSummary(
-                                spent = 19400.0,
-                                limit = 20000.0,
-                                category = "Food & dining"
-                            )
-                        ),
-                        recentTransactions = UiState.Error(
-                            message = "No internet connection",
-//                        cachedData = listOf(
-//                            TransactionItem("1", "Zomato", amount = 420.0, isCredit = false, category = "Food")
-//                        )
-                        )
-                    ),
-                    onRetryBalance = {},
-                    onRetryTransactions = {
-                        navController.navigate(NavRoutes.AnalyticsScreen)
-                    }
+                    state = state,
+                    onRetryBalance = viewModel::retryBalance,
+                    onRetryTransactions = viewModel::retryTransactions
                 )
             }
 
             composable<NavRoutes.AnalyticsScreen> {
+                val viewModel: AnalyticsViewModel = hiltViewModel()
+                val state by viewModel.state.collectAsStateWithLifecycle()
+
                 AnalyticsScreenContent(
-//                state = AnalyticsUiState(summary = UiState.Success(sampleAnalytics)),
-//                state = AnalyticsUiState(summary = UiState.Error("sampleAnalytics")),
-                    onRetry = {
-                        navController.navigate(NavRoutes.TransactionsScreen)
-                    })
+                    state = state,
+                    onRetry = viewModel::retry
+                )
             }
 
-            composable<NavRoutes.TransactionsScreen> { backStackEntry ->
+            composable<NavRoutes.TransactionsScreen> {
+                val viewModel: TransactionsViewModel = hiltViewModel()
+                val state by viewModel.state.collectAsStateWithLifecycle()
+
                 TransactionsScreenContent(
-                    state = TransactionsUiState(
-                        transactions = UiState.Success(sampleTransactions),
-                        selectedFilter = "All"
-                    ),
-//                state = TransactionsUiState(transactions = UiState.Error("emptyList()")),
-                    selectedFilter = "Food",
-                    onFilterSelected = {
-                        navController.navigate(NavRoutes.BudgetScreen)
-                    },
-                    onSearchQueryChange = {
-
-                    },
-                    onRetry = {
-                        navController.navigate(NavRoutes.BudgetScreen)
-                    }
+                    state = state,
+                    selectedFilter = state.selectedFilter,
+                    onFilterSelected = viewModel::onFilterSelected,
+                    onSearchQueryChange = viewModel::onSearchQueryChange,
+                    onRetry = viewModel::retry
                 )
             }
 
-            composable<NavRoutes.BudgetScreen> { backStackEntry ->
+            composable<NavRoutes.BudgetScreen> {
+                val viewModel: BudgetViewModel = hiltViewModel()
+                val state by viewModel.state.collectAsStateWithLifecycle()
+
                 BudgetsScreenContent(
-//                state = UiState.Success(data = emptyList()),
-                    state = UiState.Success(data = sampleBudgets),
-                    onAddBudget = {},
-                    onEditBudget = {},
-                    onRetry = {
-                        navController.navigate(NavRoutes.DashboardScreen)
-                    }
+                    state = state,
+                    onAddBudget = viewModel::onAddBudgetClicked,
+                    onEditBudget = viewModel::editBudget,
+                    onRetry = viewModel::retry
                 )
             }
 
-            composable<NavRoutes.ReceiptOCRScreen> { backStackEntry ->
-                // Automatically extracts parameters safely
-//            val arguments = backStackEntry.toRoute<NavRoutes.Details>()
 
-                ReceiptOcrScreen()
+            composable<NavRoutes.ReceiptOCRScreen> {
+                val viewModel: ReceiptOcrViewModel = hiltViewModel()
+                val receipts by viewModel.receipts.collectAsStateWithLifecycle()
+
+                ReceiptOcrScreen( viewModel =viewModel)
             }
 
-            composable<NavRoutes.ProfileScreen> { backStackEntry ->
-                // Automatically extracts parameters safely
-//            val arguments = backStackEntry.toRoute<NavRoutes.Details>()
-
-                ProfileScreenContent()
+            composable<NavRoutes.ProfileScreen> {
+                val viewModel: ProfileViewModel = hiltViewModel()
+                ProfileScreenContent(
+                    viewModel = viewModel,
+                )
             }
         }
     }

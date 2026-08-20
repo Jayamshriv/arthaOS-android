@@ -5,6 +5,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.jayam.artha_os.core.database.local.helper.TransactionSource
 import com.jayam.artha_os.core.database.local.helper.TransactionType
+import kotlin.uuid.Uuid
 
 @Entity(
     tableName = "transactions",
@@ -15,26 +16,20 @@ import com.jayam.artha_os.core.database.local.helper.TransactionType
     ]
 )
 data class TransactionEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-
+    @PrimaryKey
+    val id: Uuid = Uuid.random(),   // client-generated, no autoGenerate
     val amount: Double,
-    val type: TransactionType,          // CREDIT / DEBIT
-    val source: TransactionSource,      // SMS / MANUAL / RECEIPT_OCR
-
+    val type: TransactionType,
+    val source: TransactionSource,
     val merchantName: String? = null,
-    val category: String? = null,       // free-form for now; can normalize to CategoryEntity later
+    val category: String? = null,
     val description: String,
-
     val bankName: String? = null,
     val accountLast4: String? = null,
-
-    val referenceId: String? = null,    // bank txn ref — used to dedupe SMS ingestion
-    val rawSms: String? = null,         // original SMS body, kept for debugging/re-parsing
-
-    val date: Long,                     // epoch millis of the transaction itself
+    val referenceId: String? = null,
+    val rawSms: String? = null,
+    val date: Long,
     val isRecurring: Boolean = false,
-
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()
 )

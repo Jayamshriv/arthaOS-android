@@ -2,7 +2,6 @@ package com.jayam.artha_os.feature.transaction.presentation.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jayam.artha_os.core.ui.common_components.withoutTopPadding
 import com.jayam.artha_os.core.ui.theme.ArthaOSTheme
 import com.jayam.artha_os.core.ui.theme.ArthaTheme
 import com.jayam.artha_os.core.ui.ui_utils.StateSection
@@ -49,7 +49,9 @@ fun TransactionsScreenContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .padding(padding.withoutTopPadding())
+                .padding(bottom = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             // Search bar
             OutlinedTextField(
@@ -81,12 +83,11 @@ fun TransactionsScreenContent(
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 12.dp)
+
             )
 
             // Category filter chips
             LazyRow(
-                contentPadding = PaddingValues(horizontal = 20.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(TransactionFilters.categories) { filter ->

@@ -2,9 +2,10 @@ package com.jayam.artha_os.feature.transaction.domain
 
 import com.jayam.artha_os.core.database.local.helper.TransactionSource
 import com.jayam.artha_os.core.database.local.helper.TransactionType
+import kotlin.uuid.Uuid
 
 data class Transaction(
-    val id: Long = 0,
+    val id: Uuid = Uuid.random(),
     val amount: Double,
     val type: TransactionType,
     val source: TransactionSource,
