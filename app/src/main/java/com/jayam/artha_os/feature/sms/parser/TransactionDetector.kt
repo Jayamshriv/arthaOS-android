@@ -23,6 +23,9 @@ class TransactionDetector @Inject constructor(
             "spent",
             "withdrawn",
             "upi",
+            "sent",
+            "credit alert",
+            "debit",
             "transaction",
             "txn"
         ).any(body::contains)
